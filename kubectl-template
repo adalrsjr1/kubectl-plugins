@@ -1,0 +1,12 @@
+#!/bin/bash
+# this is a kubectl plugin to parser Jinja templates
+# https://kubernetes.io/docs/tasks/job/parallel-processing-expansion/
+
+JINJA=$(pip3 list --disable-pip-version-check 2> /dev/null | grep -i jinja2 | cut -d' ' -f 1)
+
+if [[ -z $JINJA ]]; then
+  echo "Installing Jinja2"
+  pip3 install --user jinja2
+fi
+
+python3 -c "from jinja2 import Template; import sys; print(Template(sys.stdin.read()).render());"
