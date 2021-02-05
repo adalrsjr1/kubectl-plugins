@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# https://medium.com/@ptagr/list-pods-behind-a-kubernetes-service-9bf5d766fc99
+
+# optional argument handling
+CONFIG=
+ENDPOINT=$1
+
+# regex to check if kubeconfig is pass as param
+if [[ -z "${1##*kubeconfig*}" ]]
+then
+  CONFIG=$1
+  ENDPOINT=$2
+fi
+
+kubectl $CONFIG get endpoints $ENDPOINT -o=jsonpath='{.subsets[*].addresses[*].ip}' | tr ' ' '\n' \
+| xargs -I % kubectl $CONFIG get pods --field-selector=status.podIP=% --all-namespaces
