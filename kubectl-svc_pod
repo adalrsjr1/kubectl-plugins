@@ -2,6 +2,9 @@
 
 # https://medium.com/@ptagr/list-pods-behind-a-kubernetes-service-9bf5d766fc99
 
+# usage:
+# kubectl svc_pod --kubeconfig=$HOME/.kube/<path> <svc_name>
+
 # optional argument handling
 CONFIG=
 ENDPOINT=$1
@@ -14,4 +17,4 @@ then
 fi
 
 kubectl $CONFIG get endpoints $ENDPOINT -o=jsonpath='{.subsets[*].addresses[*].ip}' | tr ' ' '\n' \
-| xargs -I % kubectl $CONFIG get pods --field-selector=status.podIP=% --all-namespaces
+| xargs -I % kubectl $CONFIG get pods --field-selector=status.podIP=% --all-namespaces -o name
